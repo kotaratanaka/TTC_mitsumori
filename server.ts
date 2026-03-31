@@ -27,21 +27,21 @@ async function startServer() {
         return res.status(400).json({ error: "Missing mimeType or data" });
       }
 
-      let apiKey = process.env.GEMINI_API_KEY;
+      const isValidKey = (key: any) => typeof key === 'string' && key.length > 10 && key !== "undefined" && key !== "null";
       
-      // Clean up the key if it's a string "undefined" or "null"
-      if (apiKey === "undefined" || apiKey === "null" || !apiKey) {
+      let apiKey = process.env.GEMINI_API_KEY;
+      if (!isValidKey(apiKey)) {
         apiKey = process.env.API_KEY;
       }
 
-      if (apiKey === "undefined" || apiKey === "null" || !apiKey) {
+      if (!isValidKey(apiKey)) {
         return res.status(401).json({ 
-          error: "API key is not set. Please select an API key in the settings.",
+          error: "APIキーが設定されていません。右上の設定メニューからAPIキーを選択してください。",
           code: "API_KEY_MISSING"
         });
       }
       
-      console.log("Using API Key (first 4 chars):", apiKey.substring(0, 4));
+      console.log("Using API Key (first 4 chars):", apiKey?.substring(0, 4));
 
       const ai = new GoogleGenAI({ apiKey });
 
@@ -110,16 +110,25 @@ async function startServer() {
         },
       });
 
-      const extractedData = JSON.parse(response.text || "{}");
+      let extractedData = {};
+      try {
+        const text = response.text || "{}";
+        // Clean up markdown code blocks if present
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        const cleanedText = jsonMatch ? jsonMatch[0] : text;
+        extractedData = JSON.parse(cleanedText);
+      } catch (parseError) {
+        console.error("Failed to parse JSON from Gemini response:", response.text);
+        throw new Error("Failed to parse extracted data as JSON");
+      }
       res.json(extractedData);
     } catch (error: any) {
       console.error("Error extracting data:", error);
       
       const errorMessage = error instanceof Error ? error.message : String(error);
       const isApiKeyError = errorMessage.includes("API key not valid") || 
-                           errorMessage.includes("API_KEY_INVALID") || 
-                           errorMessage.includes("400") || 
-                           errorMessage.includes("INVALID_ARGUMENT");
+                           errorMessage.includes("API_KEY_INVALID") ||
+                           errorMessage.includes("401");
       
       res.status(isApiKeyError ? 401 : 500).json({ 
         error: isApiKeyError ? "Invalid API Key" : "Failed to extract data", 

@@ -565,6 +565,7 @@ export default function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasUploaded, setHasUploaded] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [basicInfo, setBasicInfo] = useState({
     estimateNo: '25-FDE-205',
     date: new Date().toISOString().split('T')[0],
@@ -726,6 +727,7 @@ export default function App() {
 
   const processFile = async (file: File) => {
     setIsProcessing(true);
+    setError(null);
     
     try {
       // 1. Convert file to Base64
@@ -849,39 +851,10 @@ export default function App() {
       setHasUploaded(true);
       setCurrentStep(2);
 
-    } catch (error) {
-      console.error("Error processing file:", error);
+    } catch (err: any) {
+      console.error("Error processing file:", err);
       setIsProcessing(false);
-      // Fallback to mock data on error for demonstration
-      setTimeout(() => {
-        setExtractedCosts({
-          freightUsd: 1000,
-          freightJpy: 150000,
-          cfsThc: 32621,
-          exportHandlingFee: 10000,
-          drc: 7092,
-          blFee: 4400,
-          warehousingFee: 4275,
-          explosiveInspectionFee: 2000,
-          securityHandlingFee: 300,
-          awbFee: 500,
-          fuelCharge: 15000,
-          peakSeasonSurcharge: 0,
-          dockingCharge: 3000,
-        });
-        setBasicInfo(prev => ({
-          ...prev,
-          destination: 'NEW YORK',
-          productName: 'ELECTRONIC PARTS',
-          packages: [
-            { length: 55, width: 78, height: 45, weight: 45, quantity: 1 },
-            { length: 25, width: 22, height: 48, weight: 25, quantity: 2 }
-          ]
-        }));
-        setManualCosts(prev => ({ ...prev, customsClearance: 5900 }));
-        setHasUploaded(true);
-        setCurrentStep(2);
-      }, 500);
+      setError(err.message || "ファイルの読み取りに失敗しました。");
     }
   };
 
@@ -1248,6 +1221,12 @@ export default function App() {
                               <h3 className="text-lg font-medium text-slate-900">ファイルをドロップするか、クリックして選択</h3>
                               <p className="text-sm text-slate-500 mt-1">PDF, JPG, PNG形式に対応しています</p>
                             </div>
+                            {error && (
+                              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm flex items-center">
+                                <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
+                                <span>{error}</span>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
