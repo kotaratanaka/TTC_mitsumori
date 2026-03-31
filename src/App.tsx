@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { AlertCircle, Calculator, FileText, Plus, Trash2, Ship, Plane, Truck, ArrowRight, CheckCircle, UploadCloud, Loader2, LayoutDashboard, History, PlusCircle, Settings, Anchor, TrendingUp, Search, Filter, ChevronRight, ChevronLeft, Info } from 'lucide-react';
+import { AlertCircle, Calculator, FileText, Plus, Trash2, Ship, Plane, Truck, ArrowRight, CheckCircle, UploadCloud, Loader2, LayoutDashboard, History, PlusCircle, Settings, Anchor, TrendingUp, Search, Filter, ChevronRight, ChevronLeft, Info, User } from 'lucide-react';
 
 type Mode = 'SEA' | 'AIR' | 'COURIER';
 
@@ -247,7 +247,7 @@ const InternalCalculationSheet = ({ basicInfo, calculation }: { basicInfo: any; 
           </div>
           <div className="w-14">
             <div className="border-b border-[#0f172a] py-0.5 bg-[#f8fafc]">担当者</div>
-            <div className="h-10"></div>
+            <div className="h-10 flex items-center justify-center text-[8px] font-bold">{basicInfo.preparedBy}</div>
           </div>
         </div>
       </div>
@@ -365,25 +365,31 @@ const InternalCalculationSheet = ({ basicInfo, calculation }: { basicInfo: any; 
         </div>
         <div className="divide-y divide-[#0f172a]">
           <div className="grid grid-cols-[200px_1fr_150px_150px] h-8 items-center">
+            <div className="px-2 border-r border-[#0f172a] bg-[#f8fafc] font-bold h-full flex items-center">仕入値</div>
+            <div className="px-2 border-r border-[#0f172a] text-center h-full flex items-center justify-center">¥ {(calculation.totalCost || 0).toLocaleString()}</div>
+            <div className="text-right px-2 border-r border-[#0f172a] h-full flex items-center justify-end">¥ {(calculation.totalCost || 0).toLocaleString()}</div>
+            <div className="text-right px-2 h-full flex items-center justify-end">---</div>
+          </div>
+          <div className="grid grid-cols-[200px_1fr_150px_150px] h-8 items-center">
+            <div className="px-2 border-r border-[#0f172a] bg-[#f8fafc] font-bold h-full flex items-center">FOB価格</div>
+            <div className="px-2 border-r border-[#0f172a] text-center h-full flex items-center justify-center font-bold">¥ {(calculation.fobPrice || 0).toLocaleString()}</div>
+            <div className="text-right px-2 border-r border-[#0f172a] h-full flex items-center justify-end">¥ {(calculation.fobPrice || 0).toLocaleString()}</div>
+            <div className="text-right px-2 h-full flex items-center justify-end">---</div>
+          </div>
+          <div className="grid grid-cols-[200px_1fr_150px_150px] h-8 items-center">
+            <div className="px-2 border-r border-[#0f172a] bg-[#f8fafc] font-bold h-full flex items-center">諸経費 (OFFER)</div>
+            <div className="px-2 border-r border-[#0f172a] text-center h-full flex items-center justify-center">+ ¥ {(calculation.totalExpensesOffer || 0).toLocaleString()}</div>
+            <div className="text-right px-2 border-r border-[#0f172a] h-full flex items-center justify-end">¥ {(calculation.totalExpensesOffer || 0).toLocaleString()}</div>
+            <div className="text-right px-2 h-full flex items-center justify-end">---</div>
+          </div>
+          <div className="grid grid-cols-[200px_1fr_150px_150px] h-8 items-center bg-[#f1f5f9]/50">
             <div className="px-2 border-r border-[#0f172a] bg-[#f8fafc] font-bold h-full flex items-center">売値(FOB+諸経費)</div>
-            <div className="px-2 border-r border-[#0f172a] text-center h-full flex items-center justify-center">¥ {(calculation.fobPrice || 0).toLocaleString()} + ¥ {(calculation.totalExpensesOffer || 0).toLocaleString()}</div>
+            <div className="px-2 border-r border-[#0f172a] h-full"></div>
             <div className="text-right px-2 border-r border-[#0f172a] font-bold h-full flex items-center justify-end">¥ {(calculation.grandTotal || 0).toLocaleString()}</div>
             <div className="text-right px-2 h-full flex items-center justify-end">---</div>
           </div>
-          <div className="grid grid-cols-[200px_1fr_150px_150px] h-16 items-center">
-            <div className="px-2 border-r border-[#0f172a] bg-[#f8fafc] font-bold h-full flex items-center">仕入値</div>
-            <div className="px-2 border-r border-[#0f172a] h-full"></div>
-            <div className="text-right px-2 border-r border-[#0f172a] h-full flex items-end justify-end pb-1">¥ {(calculation.totalCost || 0).toLocaleString()}</div>
-            <div className="text-right px-2 h-full flex items-end justify-end pb-1">---</div>
-          </div>
           <div className="grid grid-cols-[200px_1fr_150px_150px] h-8 items-center">
-            <div className="px-2 border-r border-[#0f172a] bg-[#f8fafc] font-bold h-full flex items-center">小計(売値－仕入値)</div>
-            <div className="px-2 border-r border-[#0f172a] h-full"></div>
-            <div className="text-right px-2 border-r border-[#0f172a] h-full flex items-center justify-end">¥ {((calculation.grandTotal || 0) - (calculation.totalCost || 0)).toLocaleString()}</div>
-            <div className="text-right px-2 h-full flex items-center justify-end">---</div>
-          </div>
-          <div className="grid grid-cols-[200px_1fr_150px_150px] h-8 items-center">
-            <div className="px-2 border-r border-[#0f172a] bg-[#f8fafc] font-bold h-full flex items-center">諸経費</div>
+            <div className="px-2 border-r border-[#0f172a] bg-[#f8fafc] font-bold h-full flex items-center">諸経費 (ACTUAL)</div>
             <div className="px-2 border-r border-[#0f172a] h-full"></div>
             <div className="text-right px-2 border-r border-[#0f172a] h-full flex items-center justify-end">¥ {(calculation.totalExpensesActual || 0).toLocaleString()}</div>
             <div className="text-right px-2 h-full flex items-center justify-end">---</div>
@@ -391,7 +397,7 @@ const InternalCalculationSheet = ({ basicInfo, calculation }: { basicInfo: any; 
           <div className="grid grid-cols-[200px_1fr_150px_150px] h-8 items-center">
             <div className="px-2 border-r border-[#0f172a] bg-[#f8fafc] font-bold h-full flex items-center">見込み利益</div>
             <div className="px-2 border-r border-[#0f172a] h-full"></div>
-            <div className="text-right px-2 border-r border-[#0f172a] font-bold text-[#059669] h-full flex items-center justify-end">¥ {((calculation.grandTotal || 0) - (calculation.totalCost || 0) - (calculation.totalExpensesActual || 0)).toLocaleString()}</div>
+            <div className="text-right px-2 border-r border-[#0f172a] font-bold text-[#059669] h-full flex items-center justify-end">¥ {(calculation.estimatedProfit || 0).toLocaleString()}</div>
             <div className="text-right px-2 h-full flex items-center justify-end">---</div>
           </div>
           <div className="grid grid-cols-[200px_1fr_150px_150px] h-8 items-center border-t-2 border-[#0f172a]">
@@ -437,6 +443,10 @@ const OfficialEstimateSheet = ({ basicInfo, calculation }: { basicInfo: any; cal
               <span className="min-w-[100px] border-b border-[#94a3b8] text-left pb-1 inline-block">{basicInfo.date || '---'}</span>
             </div>
             <div className="flex justify-end space-x-4">
+              <span className="font-bold">PERSON IN CHARGE:</span>
+              <span className="min-w-[100px] border-b border-[#94a3b8] text-left pb-1 inline-block">{basicInfo.preparedBy}</span>
+            </div>
+            <div className="flex justify-end space-x-4">
               <span className="font-bold">PAGE:</span>
               <span className="min-w-[100px] border-b border-[#94a3b8] text-left pb-1 inline-block">1 / 1</span>
             </div>
@@ -448,27 +458,27 @@ const OfficialEstimateSheet = ({ basicInfo, calculation }: { basicInfo: any; cal
       <div className="grid grid-cols-1 gap-4 mb-8 text-[11px]">
         <div className="flex items-baseline">
           <span className="w-40 font-bold">MESSERS:</span>
-          <span className="flex-1 border-b border-[#94a3b8] pb-1 inline-block">{basicInfo.buyer || '---'}</span>
+          <span className="flex-1 border-b border-[#94a3b8] pb-1.5 leading-tight inline-block">{basicInfo.buyer || '---'}</span>
         </div>
         <div className="flex items-baseline">
           <span className="w-40 font-bold">PLACE OF DELIVERY:</span>
-          <span className="flex-1 border-b border-[#94a3b8] pb-1 inline-block">{basicInfo.destination || '---'}</span>
+          <span className="flex-1 border-b border-[#94a3b8] pb-1.5 leading-tight inline-block">{basicInfo.destination || '---'}</span>
         </div>
         <div className="flex items-baseline">
           <span className="w-40 font-bold">TIME OF SHIPMENT:</span>
-          <span className="flex-1 border-b border-[#94a3b8] pb-1 inline-block">{basicInfo.shipmentTime || '---'}</span>
+          <span className="flex-1 border-b border-[#94a3b8] pb-1.5 leading-tight inline-block">{basicInfo.shipmentTime || '---'}</span>
         </div>
         <div className="flex items-baseline">
           <span className="w-40 font-bold">TERMS OF PAYMENT:</span>
-          <span className="flex-1 border-b border-[#94a3b8] pb-1 inline-block">{basicInfo.paymentTerms || '---'}</span>
+          <span className="flex-1 border-b border-[#94a3b8] pb-1.5 leading-tight inline-block">{basicInfo.paymentTerms || '---'}</span>
         </div>
         <div className="flex items-baseline">
           <span className="w-40 font-bold">PACKING:</span>
-          <span className="flex-1 border-b border-[#94a3b8] pb-1 inline-block">{basicInfo.packing || '---'}</span>
+          <span className="flex-1 border-b border-[#94a3b8] pb-1.5 leading-tight inline-block">{basicInfo.packing || '---'}</span>
         </div>
         <div className="flex items-baseline">
           <span className="w-40 font-bold">OFFER VALIDITY:</span>
-          <span className="flex-1 border-b border-[#94a3b8] pb-1 inline-block">{basicInfo.validity || '---'}</span>
+          <span className="flex-1 border-b border-[#94a3b8] pb-1.5 leading-tight inline-block">{basicInfo.validity || '---'}</span>
         </div>
       </div>
 
@@ -547,7 +557,8 @@ const OfficialEstimateSheet = ({ basicInfo, calculation }: { basicInfo: any; cal
           </div>
           <div className="text-center w-48 space-y-12">
             <p className="text-xs">Yours faithfully,</p>
-            <div className="border-b border-[#0f172a] pb-1 font-bold">TTC FOODS CO., LTD.</div>
+            <div className="pb-1 font-bold">TTC FOODS CO., LTD.</div>
+            <div className="text-xs pt-4 border-t border-[#0f172a]">{basicInfo.preparedBy}</div>
           </div>
         </div>
       </div>
@@ -555,9 +566,95 @@ const OfficialEstimateSheet = ({ basicInfo, calculation }: { basicInfo: any; cal
   );
 };
 
+const SettingsView = ({ settings, setSettings }: { settings: any; setSettings: any }) => (
+  <div className="p-4 md:p-8 max-w-2xl mx-auto space-y-8 animate-in fade-in duration-300">
+    <div className="flex items-center space-x-3 mb-6">
+      <Settings className="w-8 h-8 text-blue-600" />
+      <h2 className="text-2xl font-bold text-slate-900">設定</h2>
+    </div>
+
+    <Card className="border-slate-200 shadow-sm">
+      <CardHeader>
+        <CardTitle className="text-lg flex items-center">
+          <User className="w-5 h-5 text-blue-600 mr-2" />
+          ユーザー設定
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="space-y-2">
+          <Label className="text-sm font-semibold text-slate-700">デフォルト担当者名</Label>
+          <Input 
+            value={settings.defaultPreparedBy} 
+            onChange={(e) => setSettings({ ...settings, defaultPreparedBy: e.target.value })}
+            placeholder="山田太郎"
+            className="bg-white"
+          />
+          <p className="text-xs text-slate-500">新規見積作成時の「担当者」欄に自動入力されます。</p>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card className="border-slate-200 shadow-sm">
+      <CardHeader>
+        <CardTitle className="text-lg flex items-center">
+          <CheckCircle className="w-5 h-5 text-blue-600 mr-2" />
+          承認フロー設定
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="space-y-2">
+          <Label className="text-sm font-semibold text-slate-700">承認申請の送信先メールアドレス</Label>
+          <Input 
+            type="email" 
+            value={settings.approvalEmail} 
+            onChange={(e) => setSettings({ ...settings, approvalEmail: e.target.value })}
+            placeholder="manager@example.com"
+            className="bg-white"
+          />
+          <p className="text-xs text-slate-500">承認申請ボタンを押した際に、このアドレス宛に通知が送られます。</p>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card className="border-slate-200 shadow-sm">
+      <CardHeader>
+        <CardTitle className="text-lg flex items-center">
+          <Info className="w-5 h-5 text-blue-600 mr-2" />
+          権限設定
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="space-y-2">
+          <Label className="text-sm font-semibold text-slate-700">閲覧権限</Label>
+          <Select 
+            value={settings.viewPermissions} 
+            onValueChange={(v) => setSettings({ ...settings, viewPermissions: v })}
+          >
+            <SelectTrigger className="bg-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">全員 (制限なし)</SelectItem>
+              <SelectItem value="admin">管理者のみ</SelectItem>
+              <SelectItem value="restricted">特定の部署のみ</SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-slate-500">見積データの閲覧範囲を制限します。</p>
+        </div>
+      </CardContent>
+    </Card>
+
+    <div className="flex justify-end">
+      <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => alert('設定を保存しました。')}>
+        設定を保存
+      </Button>
+    </div>
+  </div>
+);
+
 export default function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'create' | 'history'>('create');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'create' | 'history' | 'settings'>('create');
   const [currentStep, setCurrentStep] = useState(1);
   const [mode, setMode] = useState<Mode>('SEA');
   const [viewMode, setViewMode] = useState<'internal' | 'official'>('internal');
@@ -565,7 +662,14 @@ export default function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasUploaded, setHasUploaded] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
+  const [showApprovalConfirm, setShowApprovalConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [settings, setSettings] = useState({
+    approvalEmail: 'manager@example.com',
+    viewPermissions: 'all', // 'all', 'admin', 'restricted'
+    defaultPreparedBy: '山田太郎',
+  });
   const [basicInfo, setBasicInfo] = useState({
     estimateNo: '25-FDE-205',
     date: new Date().toISOString().split('T')[0],
@@ -584,8 +688,8 @@ export default function App() {
     exchangeRate: 148,
     asRate: 0,
     packages: [{ length: 40, width: 30, height: 25, weight: 20, quantity: 15 }],
-    unitPrice: 0,
-    quantity: 300,
+    unitPrice: 495836,
+    quantity: 1,
     deliveryDate: '',
     unit: 'KGS',
     loadingPort: 'Yokohama, Japan',
@@ -597,20 +701,21 @@ export default function App() {
     volumeWeight: 0,
     calcGW: 0,
     commissionRate: 0,
+    preparedBy: '山田太郎',
   });
 
   const [extractedCosts, setExtractedCosts] = useState({
     freightUsd: 0,
     freightJpy: 0,
-    cfsThc: 0,
-    exportHandlingFee: 0,
-    exportHandlingVolume: 0,
-    drc: 0,
-    blFee: 0,
-    warehousingFee: 0,
-    explosiveInspectionFee: 0,
-    securityHandlingFee: 0,
-    awbFee: 0,
+    cfsThc: 32621,
+    exportHandlingFee: 8000,
+    exportHandlingVolume: 5.455,
+    drc: 7092,
+    blFee: 4400,
+    warehousingFee: 4275,
+    explosiveInspectionFee: 2000,
+    securityHandlingFee: 300,
+    awbFee: 500,
     fuelCharge: 0,
     peakSeasonSurcharge: 0,
     dockingCharge: 0,
@@ -618,20 +723,20 @@ export default function App() {
 
   const [manualCosts, setManualCosts] = useState<Record<string, { actual: number; offer: number; multiplier: number }>>({
     freight: { actual: 0, offer: 0, multiplier: 1.2 },
-    cfsThc: { actual: 0, offer: 0, multiplier: 1.0 },
-    handling: { actual: 0, offer: 0, multiplier: 1.0 },
-    warehousing: { actual: 0, offer: 0, multiplier: 1.1 },
-    inspection: { actual: 0, offer: 0, multiplier: 1.1 },
-    security: { actual: 0, offer: 0, multiplier: 1.1 },
-    awbFee: { actual: 0, offer: 0, multiplier: 1.1 },
+    cfsThc: { actual: 32621, offer: 32621, multiplier: 1.0 },
+    handling: { actual: 8000, offer: 8000, multiplier: 1.0 },
+    warehousing: { actual: 4275, offer: 4275, multiplier: 1.0 },
+    inspection: { actual: 2000, offer: 2000, multiplier: 1.0 },
+    security: { actual: 300, offer: 300, multiplier: 1.0 },
+    awbFee: { actual: 500, offer: 500, multiplier: 1.0 },
     bankCharge: { actual: 0, offer: 0, multiplier: 1.0 },
     insurance: { actual: 0, offer: 0, multiplier: 3.0 },
     domestic: { actual: 0, offer: 0, multiplier: 1.2 },
     packing: { actual: 0, offer: 0, multiplier: 1.2 },
     other: { actual: 0, offer: 0, multiplier: 2.0 },
     customsClearance: { actual: 5900, offer: 11800, multiplier: 2.0 },
-    blFee: { actual: 0, offer: 0, multiplier: 1.1 },
-    drc: { actual: 0, offer: 0, multiplier: 1.1 },
+    blFee: { actual: 4400, offer: 4400, multiplier: 1.0 },
+    drc: { actual: 7092, offer: 7092, multiplier: 1.0 },
     fuel: { actual: 0, offer: 0, multiplier: 1.5 },
     peakSeason: { actual: 0, offer: 0, multiplier: 1.5 },
     docking: { actual: 0, offer: 0, multiplier: 1.1 },
@@ -661,7 +766,7 @@ export default function App() {
 
   const handleBasicChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setBasicInfo(prev => ({ ...prev, [name]: ['productName', 'paymentTerms', 'unit', 'destination', 'estimateNo', 'buyer', 'maker', 'deliveryDate', 'date', 'loadingPort', 'etd', 'shipmentTime', 'packing', 'validity', 'specification'].includes(name) ? value : Number(value) }));
+    setBasicInfo(prev => ({ ...prev, [name]: ['productName', 'paymentTerms', 'unit', 'destination', 'estimateNo', 'buyer', 'maker', 'deliveryDate', 'date', 'loadingPort', 'etd', 'shipmentTime', 'packing', 'validity', 'specification', 'preparedBy'].includes(name) ? value : Number(value) }));
   };
 
   const handleManualCostChange = (key: string, field: 'actual' | 'offer' | 'multiplier', value: string) => {
@@ -730,122 +835,142 @@ export default function App() {
     setError(null);
     
     try {
-      // 1. Convert file to Base64
-      const base64Data = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64String = reader.result as string;
-          // Remove data URL prefix (e.g., "data:image/jpeg;base64,")
-          const base64 = base64String.split(',')[1];
-          resolve(base64);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+      // Simulate processing time for demo feel
+      await new Promise(resolve => setTimeout(resolve, 2500));
 
-      // 2. Call Gemini API
-      const response = await fetch('/api/extract-data', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mimeType: file.type,
-          data: base64Data,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        const isApiKeyError = response.status === 401 || 
-                             errorData.code === 'API_KEY_MISSING' || 
-                             errorData.code === 'API_KEY_INVALID' || 
-                             (errorData.error && errorData.error.includes('API key'));
-                             
-        if (isApiKeyError) {
-          // Check if window.aistudio is available
-          if (typeof window !== 'undefined' && (window as any).aistudio) {
-            const aistudio = (window as any).aistudio;
-            // Use a non-blocking way if possible, but openSelectKey is key
-            console.warn('API key invalid or missing. Opening selection dialog.');
-            try {
-              await aistudio.openSelectKey();
-            } catch (e) {
-              console.error('Failed to open API key selection dialog:', e);
-            }
-            throw new Error('APIキーが無効、または設定されていません。APIキーを選択してから再度アップロードしてください。');
-          } else {
-            throw new Error('APIキーが無効です。管理者に連絡してください。');
-          }
-        }
-        throw new Error(errorData.error || 'Failed to extract data');
-      }
-
-      const extractedData = await response.json();
+      // Mock extracted data for demo (Based on PDF references)
+      const extractedData = {
+        destination: 'Jakarta, Indonesia',
+        productName: 'Spare Parts',
+        estimateNo: '25-TFE-035',
+        buyer: 'Indofood',
+        maker: 'オクラ',
+        incoterms: 'FOB',
+        paymentTerms: 'T/T',
+        loadingPort: 'Yokohama, Japan',
+        deliveryDate: '2025-10-30',
+        etd: '2025-10-15',
+        quantity: 1,
+        exchangeRate: 148,
+        freightUsd: 692.79,
+        freightJpy: 0,
+        cfsThc: 32621,
+        exportHandlingFee: 8000,
+        exportHandlingVolume: 5.455,
+        drc: 7092,
+        blFee: 4400,
+        warehousingFee: 4275,
+        explosiveInspectionFee: 2000,
+        securityHandlingFee: 300,
+        awbFee: 500,
+        fuelCharge: 0,
+        peakSeasonSurcharge: 0,
+        dockingCharge: 0,
+        customsClearance: 5900,
+        insuranceActual: 5055,
+        insuranceOffer: 15636,
+        domesticActual: 332000,
+        domesticOffer: 398400,
+        packingActual: 10000,
+        packingOffer: 50000,
+        bankChargeActual: 4500,
+        bankChargeOffer: 10000,
+        packages: [
+          { length: 200, width: 150, height: 182, weight: 470, quantity: 1 }
+        ]
+      };
 
       // 3. Update state with extracted data
       setExtractedCosts({
-        freightUsd: extractedData.freightUsd || 0,
-        freightJpy: extractedData.freightJpy || 0,
-        cfsThc: extractedData.cfsThc || 0,
-        exportHandlingFee: extractedData.exportHandlingFee || 0,
-        exportHandlingVolume: extractedData.exportHandlingVolume || 0,
-        drc: extractedData.drc || 0,
-        blFee: extractedData.blFee || 0,
-        warehousingFee: extractedData.warehousingFee || 0,
-        explosiveInspectionFee: extractedData.explosiveInspectionFee || 0,
-        securityHandlingFee: extractedData.securityHandlingFee || 0,
-        awbFee: extractedData.awbFee || 0,
-        fuelCharge: extractedData.fuelCharge || 0,
-        peakSeasonSurcharge: extractedData.peakSeasonSurcharge || 0,
-        dockingCharge: extractedData.dockingCharge || 0,
+        freightUsd: extractedData.freightUsd,
+        freightJpy: extractedData.freightJpy,
+        cfsThc: extractedData.cfsThc,
+        exportHandlingFee: extractedData.exportHandlingFee,
+        exportHandlingVolume: extractedData.exportHandlingVolume,
+        drc: extractedData.drc,
+        blFee: extractedData.blFee,
+        warehousingFee: extractedData.warehousingFee,
+        explosiveInspectionFee: extractedData.explosiveInspectionFee,
+        securityHandlingFee: extractedData.securityHandlingFee,
+        awbFee: extractedData.awbFee,
+        fuelCharge: extractedData.fuelCharge,
+        peakSeasonSurcharge: extractedData.peakSeasonSurcharge,
+        dockingCharge: extractedData.dockingCharge,
       });
 
       setBasicInfo(prev => ({
         ...prev,
-        destination: extractedData.destination || prev.destination,
-        productName: extractedData.productName || prev.productName,
-        estimateNo: extractedData.estimateNo || prev.estimateNo,
-        buyer: extractedData.buyer || prev.buyer,
-        maker: extractedData.maker || prev.maker,
-        incoterms: extractedData.incoterms || prev.incoterms,
-        paymentTerms: extractedData.paymentTerms || prev.paymentTerms,
-        loadingPort: extractedData.loadingPort || prev.loadingPort,
-        deliveryDate: extractedData.deliveryDate || prev.deliveryDate,
-        etd: extractedData.etd || prev.etd,
-        quantity: extractedData.quantity || prev.quantity,
-        packages: extractedData.packages && extractedData.packages.length > 0 ? extractedData.packages : prev.packages,
+        destination: extractedData.destination,
+        productName: extractedData.productName,
+        estimateNo: extractedData.estimateNo,
+        buyer: extractedData.buyer,
+        maker: extractedData.maker,
+        incoterms: extractedData.incoterms,
+        paymentTerms: extractedData.paymentTerms,
+        loadingPort: extractedData.loadingPort,
+        deliveryDate: extractedData.deliveryDate,
+        etd: extractedData.etd,
+        quantity: extractedData.quantity,
+        unitPrice: 495836, // From PDF reference
+        packages: extractedData.packages,
       }));
 
       const calcExchangeRate = (extractedData.exchangeRate || 148) + 5;
       
       const newManualCosts: Partial<Record<string, { actual: number; offer: number; multiplier: number }>> = {
         freight: { 
-          actual: mode === 'SEA' ? Math.round((extractedData.freightUsd || 0) * calcExchangeRate) : (extractedData.freightJpy || 0),
-          offer: mode === 'SEA' ? Math.round((extractedData.freightUsd || 0) * calcExchangeRate * 1.2) : Math.round((extractedData.freightJpy || 0) * 1.5),
-          multiplier: mode === 'SEA' ? 1.2 : 1.5
+          actual: Math.round((extractedData.freightUsd || 0) * calcExchangeRate),
+          offer: Math.round((extractedData.freightUsd || 0) * calcExchangeRate * 1.2),
+          multiplier: 1.2
         },
-        cfsThc: { actual: extractedData.cfsThc || 0, offer: extractedData.cfsThc || 0, multiplier: 1.0 },
-        handling: { actual: extractedData.exportHandlingFee || 0, offer: extractedData.exportHandlingFee || 0, multiplier: 1.0 },
-        warehousing: { actual: extractedData.warehousingFee || 0, offer: Math.round((extractedData.warehousingFee || 0) * 1.1), multiplier: 1.1 },
-        inspection: { actual: extractedData.explosiveInspectionFee || 0, offer: Math.round((extractedData.explosiveInspectionFee || 0) * 1.1), multiplier: 1.1 },
-        security: { actual: extractedData.securityHandlingFee || 0, offer: Math.round((extractedData.securityHandlingFee || 0) * 1.1), multiplier: 1.1 },
-        awbFee: { actual: extractedData.awbFee || 0, offer: Math.round((extractedData.awbFee || 0) * 1.1), multiplier: 1.1 },
-        bankCharge: { actual: 0, offer: 0, multiplier: 0 }, // Will be calculated in useMemo if not set
-        insurance: { actual: 0, offer: 0, multiplier: 0 }, // Will be calculated in useMemo if not set
-        domestic: { actual: 0, offer: 0, multiplier: 1.2 },
-        packing: { actual: 0, offer: 0, multiplier: 1.2 },
+        cfsThc: { actual: extractedData.cfsThc || 32621, offer: extractedData.cfsThc || 32621, multiplier: 1.0 },
+        handling: { actual: extractedData.exportHandlingFee || 8000, offer: extractedData.exportHandlingFee || 8000, multiplier: 1.0 },
+        warehousing: { actual: extractedData.warehousingFee || 4275, offer: extractedData.warehousingFee || 4275, multiplier: 1.0 },
+        inspection: { actual: extractedData.explosiveInspectionFee || 2000, offer: extractedData.explosiveInspectionFee || 2000, multiplier: 1.0 },
+        security: { actual: extractedData.securityHandlingFee || 300, offer: extractedData.securityHandlingFee || 300, multiplier: 1.0 },
+        awbFee: { actual: extractedData.awbFee || 500, offer: extractedData.awbFee || 500, multiplier: 1.0 },
+        bankCharge: { 
+          actual: extractedData.bankChargeActual, 
+          offer: extractedData.bankChargeOffer, 
+          multiplier: Number((extractedData.bankChargeOffer / extractedData.bankChargeActual).toFixed(2)) 
+        },
+        insurance: { 
+          actual: extractedData.insuranceActual, 
+          offer: extractedData.insuranceOffer, 
+          multiplier: Number((extractedData.insuranceOffer / extractedData.insuranceActual).toFixed(2)) 
+        },
+        domestic: { 
+          actual: extractedData.domesticActual, 
+          offer: extractedData.domesticOffer, 
+          multiplier: Number((extractedData.domesticOffer / extractedData.domesticActual).toFixed(2)) 
+        },
+        packing: { 
+          actual: extractedData.packingActual, 
+          offer: extractedData.packingOffer, 
+          multiplier: Number((extractedData.packingOffer / extractedData.packingActual).toFixed(2)) 
+        },
         other: { actual: 0, offer: 0, multiplier: 2.0 },
-        customsClearance: { actual: extractedData.customsClearance || 5900, offer: (extractedData.customsClearance || 5900) * 2, multiplier: 2.0 },
-        blFee: { actual: extractedData.blFee || 0, offer: Math.round((extractedData.blFee || 0) * 1.1), multiplier: 1.1 },
-        drc: { actual: extractedData.drc || 0, offer: Math.round((extractedData.drc || 0) * 1.1), multiplier: 1.1 },
-        fuel: { actual: extractedData.fuelCharge || 0, offer: Math.round((extractedData.fuelCharge || 0) * 1.5), multiplier: 1.5 },
-        peakSeason: { actual: extractedData.peakSeasonSurcharge || 0, offer: Math.round((extractedData.peakSeasonSurcharge || 0) * 1.5), multiplier: 1.5 },
-        docking: { actual: extractedData.dockingCharge || 0, offer: Math.round((extractedData.dockingCharge || 0) * 1.1), multiplier: 1.1 },
+        customsClearance: { actual: extractedData.customsClearance || 5900, offer: 11800, multiplier: 2.0 },
+        blFee: { actual: extractedData.blFee || 4400, offer: 4400, multiplier: 1.0 },
+        drc: { actual: extractedData.drc || 7092, offer: 7092, multiplier: 1.0 },
+        fuel: { actual: extractedData.fuelCharge || 0, offer: 0, multiplier: 1.0 },
+        peakSeason: { actual: extractedData.peakSeasonSurcharge || 0, offer: 0, multiplier: 1.0 },
+        docking: { actual: extractedData.dockingCharge || 0, offer: 0, multiplier: 1.0 },
         bankGuarantee: { actual: 0, offer: 0, multiplier: 1.0 },
       };
 
       setManualCosts(prev => ({ ...prev, ...newManualCosts }));
+      
+      // Set overrides to ensure mock values are used
+      setManualOverrides({
+        bankCharge: { actual: true, offer: true, multiplier: true },
+        insurance: { actual: true, offer: true, multiplier: true },
+        domestic: { actual: true, offer: true, multiplier: true },
+        packing: { actual: true, offer: true, multiplier: true },
+        customsClearance: { actual: true, offer: true, multiplier: true },
+        blFee: { actual: true, offer: true, multiplier: true },
+        drc: { actual: true, offer: true, multiplier: true },
+      });
 
       setIsProcessing(false);
       setHasUploaded(true);
@@ -854,7 +979,7 @@ export default function App() {
     } catch (err: any) {
       console.error("Error processing file:", err);
       setIsProcessing(false);
-      setError(err.message || "ファイルの読み取りに失敗しました。");
+      setError("デモ用の読み取り処理中にエラーが発生しました。");
     }
   };
 
@@ -1065,7 +1190,8 @@ export default function App() {
             <FileText className="w-4 h-4 mr-3" /> 見積履歴
           </button>
           <button 
-            className="flex items-center w-full px-4 py-2.5 rounded-md text-sm font-medium transition-colors text-slate-400 hover:text-white hover:bg-slate-800"
+            onClick={() => setCurrentView('settings')} 
+            className={`flex items-center w-full px-4 py-2.5 rounded-md text-sm font-medium transition-colors ${currentView === 'settings' ? 'bg-[#1E3A8A] text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
           >
             <Settings className="w-4 h-4 mr-3" /> 設定
           </button>
@@ -1088,6 +1214,7 @@ export default function App() {
       <div className="flex-1 overflow-auto">
         {currentView === 'dashboard' && <DashboardView />}
         {currentView === 'history' && <HistoryView />}
+        {currentView === 'settings' && <SettingsView settings={settings} setSettings={setSettings} />}
         
         {currentView === 'create' && (
           <div className="p-4 md:p-8 animate-in fade-in duration-300">
@@ -1112,7 +1239,6 @@ export default function App() {
                     { id: 1, title: 'アップロード', icon: UploadCloud },
                     { id: 2, title: 'データ入力・補正', icon: FileText },
                     { id: 3, title: '船積諸経費＆見積（コスト計算書）', icon: Calculator },
-                    { id: 4, title: '承認・出力', icon: CheckCircle },
                   ].map((step, idx) => {
                     const isActive = currentStep === step.id;
                     const isCompleted = currentStep > step.id;
@@ -1269,6 +1395,10 @@ export default function App() {
                               <div className="space-y-1.5">
                                 <Label className="text-[11px] text-slate-600 font-bold">DATE</Label>
                                 <Input type="date" name="date" value={basicInfo.date} onChange={handleBasicChange} className="h-8 bg-white text-xs" />
+                              </div>
+                              <div className="space-y-1.5">
+                                <Label className="text-[11px] text-slate-600 font-bold">PERSON IN CHARGE (担当者)</Label>
+                                <Input name="preparedBy" value={basicInfo.preparedBy} onChange={handleBasicChange} className="h-8 bg-white text-xs" />
                               </div>
                               <div className="space-y-1.5">
                                 <Label className="text-[11px] flex items-center text-slate-600 font-bold">
@@ -1706,16 +1836,42 @@ export default function App() {
                   <div className="space-y-8 animate-in slide-in-from-right-4 duration-300">
                     <div className="flex justify-between items-end border-b border-slate-100 pb-4">
                       <div>
-                        <h2 className="text-2xl font-bold text-slate-800">船積諸経費 ＆ 見積（コスト計算書）</h2>
+                        <h2 className="text-2xl font-bold text-slate-800">船積諸経費＆見積（コスト計算書）</h2>
                         <p className="text-slate-500 mt-1">PDF出力用のフォーマットで計算結果を確認します。</p>
                       </div>
-                      <Button 
-                        variant="outline" 
-                        className="border-blue-200 text-blue-700 hover:bg-blue-50"
-                        onClick={() => handleExportPDF('calculation-preview-pdf', `船積諸経費_見積コスト計算書_${basicInfo.estimateNo || 'EST-2024-047'}.pdf`)}
-                      >
-                        <FileText className="w-4 h-4 mr-2" /> PDFダウンロード
-                      </Button>
+                      <div className="flex items-center space-x-4">
+                        <div className="flex bg-slate-100 p-1 rounded-lg">
+                          <Button 
+                            variant={viewMode === 'internal' ? 'default' : 'ghost'} 
+                            size="sm" 
+                            onClick={() => setViewMode('internal')}
+                            className="text-xs h-8"
+                          >
+                            コスト計算書
+                          </Button>
+                          <Button 
+                            variant={viewMode === 'official' ? 'default' : 'ghost'} 
+                            size="sm" 
+                            onClick={() => setViewMode('official')}
+                            className="text-xs h-8"
+                          >
+                            公式見積書
+                          </Button>
+                        </div>
+                        <Button 
+                          variant="outline" 
+                          className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                          onClick={() => {
+                            const elementId = viewMode === 'internal' ? 'calculation-preview-pdf' : 'official-estimate-pdf';
+                            const filename = viewMode === 'internal' 
+                              ? `船積諸経費_見積コスト計算書_${basicInfo.estimateNo || 'EST-2024-047'}.pdf` 
+                              : `ESTIMATE_${basicInfo.estimateNo || 'EST-2024-047'}.pdf`;
+                            handleExportPDF(elementId, filename);
+                          }}
+                        >
+                          <FileText className="w-4 h-4 mr-2" /> PDFダウンロード
+                        </Button>
+                      </div>
                     </div>
 
                     {calculation.missingItems.length > 0 && (
@@ -1732,50 +1888,6 @@ export default function App() {
                       </div>
                     )}
 
-                    <InternalCalculationSheet basicInfo={basicInfo} calculation={calculation} />
-
-                    <div className="flex justify-between pt-6 border-t border-slate-100">
-                      <Button variant="outline" onClick={() => setCurrentStep(2)}>
-                        <ChevronLeft className="w-4 h-4 mr-2" /> 戻る
-                      </Button>
-                      <Button 
-                        onClick={() => setCurrentStep(4)} 
-                        disabled={calculation.missingItems.length > 0}
-                        className="w-32"
-                      >
-                        確認・出力 <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {currentStep === 4 && (
-                  <div className="space-y-8 animate-in slide-in-from-right-4 duration-300">
-                    <div className="flex justify-between items-end border-b border-slate-100 pb-4">
-                      <div>
-                        <h2 className="text-2xl font-bold text-slate-800">承認・出力</h2>
-                        <p className="text-slate-500 mt-1">見積書の内容を確認し、承認申請またはPDF出力を行います。</p>
-                      </div>
-                      <div className="flex bg-slate-100 p-1 rounded-lg">
-                        <Button 
-                          variant={viewMode === 'internal' ? 'default' : 'ghost'} 
-                          size="sm" 
-                          onClick={() => setViewMode('internal')}
-                          className="text-xs h-8"
-                        >
-                          船積諸経費 ＆ 見積（コスト計算書）
-                        </Button>
-                        <Button 
-                          variant={viewMode === 'official' ? 'default' : 'ghost'} 
-                          size="sm" 
-                          onClick={() => setViewMode('official')}
-                          className="text-xs h-8"
-                        >
-                          公式見積書
-                        </Button>
-                      </div>
-                    </div>
-
                     <div className="flex justify-center overflow-auto py-4 bg-slate-200/50 rounded-xl min-h-[600px]">
                       {viewMode === 'internal' ? (
                         <InternalCalculationSheet basicInfo={basicInfo} calculation={calculation} />
@@ -1785,28 +1897,57 @@ export default function App() {
                     </div>
 
                     <div className="flex justify-between pt-6 border-t border-slate-100">
-                      <Button variant="outline" onClick={() => setCurrentStep(3)}>
+                      <Button variant="outline" onClick={() => setCurrentStep(2)}>
                         <ChevronLeft className="w-4 h-4 mr-2" /> 戻る
                       </Button>
-                      <div className="flex space-x-3">
+                      <div className="flex space-x-4">
                         <Button 
-                          variant="outline" 
-                          className="border-blue-200 text-blue-700 hover:bg-blue-50"
-                          onClick={() => {
-                            const elementId = viewMode === 'internal' ? 'calculation-preview-pdf' : 'official-estimate-pdf';
-                            const filename = viewMode === 'internal' 
-                              ? `船積諸経費_見積コスト計算書_${basicInfo.estimateNo || 'EST-2024-000'}.pdf` 
-                              : `ESTIMATE_${basicInfo.estimateNo || 'EST-2024-000'}.pdf`;
-                            handleExportPDF(elementId, filename);
-                          }}
+                          onClick={() => setShowApprovalConfirm(true)} 
+                          className="bg-amber-600 hover:bg-amber-700 text-white"
+                          disabled={isApproving}
                         >
-                          <FileText className="w-4 h-4 mr-2" /> PDFダウンロード
-                        </Button>
-                        <Button className="bg-blue-600 hover:bg-blue-700">
-                          <CheckCircle className="w-4 h-4 mr-2" /> 承認申請する
+                          {isApproving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-2" />}
+                          承認申請を送る
                         </Button>
                       </div>
                     </div>
+
+                    {showApprovalConfirm && (
+                      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-in fade-in duration-200">
+                        <Card className="w-full max-w-md mx-4 shadow-2xl border-slate-200">
+                          <CardHeader>
+                            <CardTitle className="text-lg flex items-center">
+                              <AlertCircle className="w-5 h-5 text-amber-500 mr-2" />
+                              承認申請の確認
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <p className="text-slate-600">本当に承認申請を送りますか？</p>
+                            <div className="p-3 bg-slate-50 rounded-lg text-xs text-slate-500 space-y-1">
+                              <p>送信先: <span className="font-bold text-slate-700">{settings.approvalEmail}</span></p>
+                              <p>見積番号: <span className="font-bold text-slate-700">{basicInfo.estimateNo}</span></p>
+                              <p>担当者: <span className="font-bold text-slate-700">{basicInfo.preparedBy}</span></p>
+                            </div>
+                            <div className="flex justify-end space-x-3 pt-2">
+                              <Button variant="outline" onClick={() => setShowApprovalConfirm(false)}>キャンセル</Button>
+                              <Button 
+                                className="bg-blue-600 hover:bg-blue-700"
+                                onClick={async () => {
+                                  setIsApproving(true);
+                                  setShowApprovalConfirm(false);
+                                  // Simulate email sending
+                                  await new Promise(resolve => setTimeout(resolve, 2000));
+                                  setIsApproving(false);
+                                  alert(`${settings.approvalEmail} 宛に承認申請メールを送信しました。`);
+                                }}
+                              >
+                                送信する
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
